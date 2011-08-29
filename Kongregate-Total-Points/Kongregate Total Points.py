@@ -98,7 +98,7 @@ while True:
     print("\n")
     p = getLink(raw_page)
     if(p == None):
-        print("Badges: "+str(bdg)+"\nBadge of the day: "+str(botd)+"\nGames rated: "+str(gRate)+"\tArt rated: "+str(aRate)+"\nReferrals: "+str(ref)+"\nOthers: "+str(other)+"\nTotal: "+str(bdg+botd+gRate+aRate+ref+other))
+        print("Badges: "+str(bdg)+"\nBadge of the day: "+str(botd)+"\nGames rated: "+str(gRate)+"\tArt rated: "+str(aRate)+"\nReferrals: "+str(ref)+"\nOther: "+str(other)+"\nTotal: "+str(bdg+botd+gRate+aRate+ref+other))
         break
     
     url = "http://www.kongregate.com"+p
