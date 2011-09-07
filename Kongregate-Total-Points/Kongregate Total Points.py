@@ -1,4 +1,5 @@
 from urllib import urlopen
+import re
 
 url = "http://www.kongregate.com/accounts/"+raw_input("Username: ")+"/rewards"
 available = True
@@ -9,7 +10,10 @@ botd = 0
 gRate = 0
 aRate = 0
 ref = 0
+quests = 0
 other = 0
+cards = 0
+challenges = ""
 
 def getText(text, firstExp, lastExp):
     x1 = text.find(firstExp)+len(firstExp)
@@ -65,6 +69,8 @@ def parseData(text):
         points = getText(e, date+"<td>", "</td>")
         if(points != ''):
             getReason(e, points)
+        else:
+            getReason(e, 0)
             
         body = getText(body, e, None)
 
@@ -75,7 +81,10 @@ def getReason(text, points):
     global gRate
     global aRate
     global ref
+    global quests
     global other
+    global cards
+    global challenges
 
     points = int(points)
     
@@ -88,17 +97,30 @@ def getReason(text, points):
     elif("Rated artwork" in text):
         aRate += points
     elif("Friend signed up" in text or "Referral bonus" in text):
-        ref += points
+        ref += points 
+    elif("Acquired card" in text):
+        cards += 1
     else:
-        other += points
+        patt2 = re.compile('reward_description">Completed.+quest</span')
+        if(len(patt2.findall(text))>0):
+            challenges += str(patt2.findall(text))
+            quests += points
+        else:
+            if("Completed challenge" in text):
+                challenges += text+"\n\n\n"
+            
+            other += points
         
 while True:
-    raw_page = urlopen(url).read()
+    try:
+        raw_page = urlopen(url).read()
+    except:
+        continue
     parseData(raw_page)
     print("\n")
     p = getLink(raw_page)
     if(p == None):
-        print("Badges: "+str(bdg)+"\nBadge of the day: "+str(botd)+"\nGames rated: "+str(gRate)+"\tArt rated: "+str(aRate)+"\nReferrals: "+str(ref)+"\nOther: "+str(other)+"\nTotal: "+str(bdg+botd+gRate+aRate+ref+other))
+        print("Badges: "+str(bdg)+"\nBadge of the day: "+str(botd)+"\nGames rated: "+str(gRate)+"\tArt rated: "+str(aRate)+"\nReferrals: "+str(ref)+"\nQuests: "+str(quests)+"\nOther: "+str(other)+"\nTotal: "+str(bdg+botd+gRate+aRate+ref+quests+other)+"\nCards: "+str(cards))
         break
     
     url = "http://www.kongregate.com"+p
