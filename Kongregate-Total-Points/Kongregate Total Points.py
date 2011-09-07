@@ -1,3 +1,8 @@
+# Developed by resterman
+# August, 2011
+# Specially developed to be used with Kongregate users
+# Do not try to use this with an user with a private profile, it will fail
+
 from urllib import urlopen
 import re
 
